@@ -9,6 +9,6 @@ class Config:
     # mysql+pymysql://username:password@localhost/job_recommendation_db
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "sqlite:///" + os.path.join(BASE_DIR, "database", "jobs.db")
+        "sqlite:////tmp/jobs.db"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
