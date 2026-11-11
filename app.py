@@ -294,7 +294,12 @@ def init_db():
     db.create_all()
     print("Database initialized.")
 
-
+with app.app_context():
+    db.create_all()
+    if Job.query.count() == 0:
+        import seed_data
+        if hasattr(seed_data, "seed"):
+            seed_data.seed()
 if __name__ == "__main__":
     import os
     with app.app_context():
