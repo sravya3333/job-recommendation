@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}My Profile &mdash; JobMatch AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>My Profile</h1>
+    <p class="muted">Keep this updated &mdash; it powers your AI job recommendations.</p>
+</section>
+
+<section class="form-card">
+    <form method="POST" action="{{ url_for('profile') }}">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="education">Education</label>
+                <input type="text" id="education" name="education" placeholder="e.g. B.Tech in Computer Science"
+                       value="{{ profile.education or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="preferred_role">Preferred Job Role</label>
+                <input type="text" id="preferred_role" name="preferred_role" placeholder="e.g. Backend Developer"
+                       value="{{ profile.preferred_role or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="experience_years">Years of Experience</label>
+                <input type="number" step="0.5" min="0" id="experience_years" name="experience_years"
+                       value="{{ profile.experience_years or 0 }}">
+            </div>
+
+            <div class="form-group">
+                <label for="location">Preferred Location</label>
+                <input type="text" id="location" name="location" placeholder="e.g. Hyderabad or Remote"
+                       value="{{ profile.location or '' }}">
+            </div>
+
+            <div class="form-group form-group-full">
+                <label for="skills">Skills <span class="muted">(comma-separated)</span></label>
+                <input type="text" id="skills" name="skills" placeholder="e.g. Python, Flask, SQL, Machine Learning"
+                       value="{{ profile.skills or '' }}">
+            </div>
+
+            <div class="form-group form-group-full">
+                <label for="interests">Interests / Domains <span class="muted">(comma-separated)</span></label>
+                <input type="text" id="interests" name="interests" placeholder="e.g. AI, Web Development, Cloud Computing"
+                       value="{{ profile.interests or '' }}">
+            </div>
+
+            <div class="form-group form-group-full">
+                <label for="experience_summary">Experience Summary</label>
+                <textarea id="experience_summary" name="experience_summary" rows="4"
+                          placeholder="Briefly describe your projects, internships, or work experience...">{{ profile.experience_summary or '' }}</textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Profile</button>
+    </form>
+</section>
+{% endblock %}

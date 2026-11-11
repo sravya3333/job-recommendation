@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }} &mdash; JobMatch AI{% endblock %}
+
+{% block content %}
+<section class="job-detail-card">
+    <div class="job-detail-header">
+        <div>
+            <h1>{{ job.title }}</h1>
+            <p class="job-meta">{{ job.company }} &middot; {{ job.location }} &middot; {{ job.job_type }}</p>
+        </div>
+        {% if match %}
+        <div class="match-badge-large">
+            <span class="score">{{ match.score }}%</span>
+            <span class="label">Match</span>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if match %}
+    <div class="reason-box">
+        <strong>Why this job is recommended for you:</strong>
+        <p>{{ match.reason }}</p>
+        {% if match.missing_skills %}
+        <p class="muted small">Skills you could add: {{ match.missing_skills|join(', ') }}</p>
+        {% endif %}
+    </div>
+    {% elif current_user.is_authenticated %}
+    <div class="reason-box muted">
+        Complete your profile skills to see your match score for this job.
+        <a href="{{ url_for('profile') }}">Update profile &rarr;</a>
+    </div>
+    {% endif %}
+
+    <h3>Job Description</h3>
+    <p class="job-full-desc">{{ job.description }}</p>
+
+    <h3>Required Skills</h3>
+    <div class="skill-tags">
+        {% for skill in job.skills_list() %}
+            <span class="tag">{{ skill }}</span>
+        {% endfor %}
+    </div>
+
+    <p class="muted">Minimum Experience: {{ job.min_experience }} year(s)</p>
+
+    <div class="job-detail-actions">
+        {% if current_user.is_authenticated %}
+            <form method="POST" action="{{ url_for('save_job', job_id=job.id) }}">
+                <button type="submit" class="btn {{ 'btn-saved' if is_saved else 'btn-outline' }}">
+                    {{ '★ Saved' if is_saved else '☆ Save Job' }}
+                </button>
+            </form>
+            {% if is_applied %}
+                <span class="applied-label">✔ You have applied for this job</span>
+            {% else %}
+                <form method="POST" action="{{ url_for('apply_job', job_id=job.id) }}">
+                    <button type="submit" class="btn btn-primary">Apply Now</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Log in to Apply</a>
+        {% endif %}
+        <a href="{{ url_for('jobs') }}" class="btn btn-secondary">&larr; Back to Jobs</a>
+    </div>
+</section>
+{% endblock %}

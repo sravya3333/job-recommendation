@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}JobMatch AI &mdash; Find jobs that fit you{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <h1>Find the job that actually <span>fits you</span>.</h1>
+        <p>
+            JobMatch AI uses TF-IDF and Cosine Similarity to compare your skills,
+            education, and experience against real job descriptions &mdash; then
+            shows you a match percentage and explains exactly why each job suits you.
+        </p>
+        <div class="hero-actions">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('recommendations') }}" class="btn btn-primary">View My Recommendations</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+                <a href="{{ url_for('jobs') }}" class="btn btn-secondary">Browse Jobs</a>
+            {% endif %}
+        </div>
+        <p class="hero-stat">{{ total_jobs }}+ jobs currently listed on the platform.</p>
+    </div>
+    <div class="hero-graphic">
+        <div class="match-card-demo">
+            <div class="match-card-demo-top">
+                <strong>Machine Learning Engineer</strong>
+                <span class="badge badge-score">92% Match</span>
+            </div>
+            <p class="muted">DataWiz Analytics &middot; Bangalore</p>
+            <p class="reason">Matches 5 of your skills: Python, Scikit-learn, Pandas...</p>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <h3>1. Build Your Profile</h3>
+        <p>Add your education, skills, experience, and preferred job role &amp; location.</p>
+    </div>
+    <div class="feature-card">
+        <h3>2. AI Matching</h3>
+        <p>Our engine compares your profile with every job using TF-IDF vectors and cosine similarity.</p>
+    </div>
+    <div class="feature-card">
+        <h3>3. Apply with Confidence</h3>
+        <p>See your match score and the exact reasons a job fits, then save or apply in one click.</p>
+    </div>
+</section>
+{% endblock %}

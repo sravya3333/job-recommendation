@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Dashboard &mdash; JobMatch AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>Welcome, {{ current_user.name }}</h1>
+    <p class="muted">Here's your job search overview.</p>
+</section>
+
+{% if not profile_complete %}
+<div class="alert-banner">
+    Your profile is incomplete. <a href="{{ url_for('profile') }}">Complete it now</a> to get accurate AI recommendations.
+</div>
+{% endif %}
+
+<section class="stats-row">
+    <div class="stat-card">
+        <span class="stat-number">{{ total_jobs }}</span>
+        <span class="stat-label">Jobs Available</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ saved|length }}</span>
+        <span class="stat-label">Saved Jobs</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ applied|length }}</span>
+        <span class="stat-label">Applications</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ recommended|length }}</span>
+        <span class="stat-label">Top Matches</span>
+    </div>
+</section>
+
+<section class="dashboard-section">
+    <div class="section-header">
+        <h2>Top Recommendations</h2>
+        <a href="{{ url_for('recommendations') }}">See all &rarr;</a>
+    </div>
+    <div class="job-grid">
+        {% for r in recommended %}
+        <div class="job-card">
+            <div class="job-card-top">
+                <h3><a href="{{ url_for('job_detail', job_id=r.job.id) }}">{{ r.job.title }}</a></h3>
+                <span class="badge badge-score">{{ r.score }}%</span>
+            </div>
+            <p class="job-meta">{{ r.job.company }} &middot; {{ r.job.location }}</p>
+            <p class="reason">{{ r.reason }}</p>
+        </div>
+        {% else %}
+        <p class="empty-state">Complete your profile to see recommendations here.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="dashboard-section">
+    <div class="section-header">
+        <h2>Saved Jobs</h2>
+    </div>
+    <div class="table-wrapper">
+        <table class="simple-table">
+            <thead><tr><th>Title</th><th>Company</th><th>Location</th><th>Saved On</th><th></th></tr></thead>
+            <tbody>
+            {% for s in saved %}
+                <tr>
+                    <td><a href="{{ url_for('job_detail', job_id=s.job.id) }}">{{ s.job.title }}</a></td>
+                    <td>{{ s.job.company }}</td>
+                    <td>{{ s.job.location }}</td>
+                    <td>{{ s.saved_at.strftime('%d %b %Y') }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('save_job', job_id=s.job.id) }}">
+                            <button type="submit" class="btn btn-sm btn-outline">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5" class="empty-state">You haven't saved any jobs yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="dashboard-section">
+    <div class="section-header">
+        <h2>Applied Jobs</h2>
+    </div>
+    <div class="table-wrapper">
+        <table class="simple-table">
+            <thead><tr><th>Title</th><th>Company</th><th>Applied On</th><th>Status</th></tr></thead>
+            <tbody>
+            {% for a in applied %}
+                <tr>
+                    <td><a href="{{ url_for('job_detail', job_id=a.job.id) }}">{{ a.job.title }}</a></td>
+                    <td>{{ a.job.company }}</td>
+                    <td>{{ a.applied_at.strftime('%d %b %Y') }}</td>
+                    <td><span class="status-pill">{{ a.status }}</span></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4" class="empty-state">You haven't applied to any jobs yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
